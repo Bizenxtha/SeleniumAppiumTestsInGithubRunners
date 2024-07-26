@@ -1,60 +1,39 @@
-name: run android tests in github runner
+name: Run Android Tests on GitHub Runner
 
 on: push
 
 jobs:
   run-mobile-tests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - name: setup java
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: pull the project into the runner
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: setup appium
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          sdk-version: '29'
+          ndk-version: '21.3.6528147'
+
+      - name: Setup Appium
         run: |
           npm install -g appium
           appium -v
           appium &>/dev/null &
 
-      - name: Check environment
-        run: |
-          echo "PATH: $PATH"
-          ls /bin
-          ls /usr/bin
-
-      - name: Install Android SDK Command-Line Tools
-        shell: bash
-        run: |
-          /bin/mkdir -p $HOME/android-sdk
-          curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-mac-8512546_latest.zip
-          unzip commandlinetools.zip -d $HOME/android-sdk
-          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --update
-        env:
-          ANDROID_HOME: $HOME/android-sdk
-          PATH: $HOME/android-sdk/cmdline-tools/bin:$PATH
-
-      - name: Verify sdkmanager installation
-        run: |
-          which sdkmanager
-          sdkmanager --list
-        env:
-          ANDROID_HOME: $HOME/android-sdk
-          PATH: $HOME/android-sdk/cmdline-tools/bin:$PATH
-
-      - name: setup emulator
+      - name: Setup Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           arch: arm64-v8a
           script: |
-            # Wait for emulator to be fully started
             adb wait-for-device
             adb shell input keyevent 82
-            # Run tests
             mvn clean test -Pandroid
