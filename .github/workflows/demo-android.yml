@@ -1,4 +1,4 @@
-name: run android tests in github runner
+name: Run Android Tests in GitHub Runner
 
 on: push
 
@@ -7,22 +7,24 @@ jobs:
     runs-on: macos-12
 
     steps:
-      - name: setup java
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: pull the project in to the runner
+      - name: Checkout Project
         uses: actions/checkout@v3
 
-      - name: setup appium
+      - name: Setup Appium
         run: |
           npm install -g appium
           appium -v
           appium &>/dev/null &
+          echo "Waiting for Appium server to start..."
+          sleep 15  # Adjust this if needed, to give Appium enough time to start
 
-      - name: run appium android tests
+      - name: Run Appium Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
