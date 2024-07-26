@@ -22,7 +22,7 @@ jobs:
           appium -v
           appium &>/dev/null &
 
-      - name: run appium android tests
+      - name: run appium android tests Bijay
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
