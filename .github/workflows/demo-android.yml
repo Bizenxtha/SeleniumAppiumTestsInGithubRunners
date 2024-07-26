@@ -22,9 +22,23 @@ jobs:
           appium -v
           appium &>/dev/null &
 
-      - name: update android sdk tools
+      - name: Install Android SDK Command-Line Tools
         run: |
-          yes | sdkmanager --update
+          mkdir -p $HOME/android-sdk
+          curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-mac-8512546_latest.zip
+          unzip commandlinetools.zip -d $HOME/android-sdk
+          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --update
+        env:
+          ANDROID_HOME: $HOME/android-sdk
+          PATH: $HOME/android-sdk/cmdline-tools/bin:$PATH
+
+      - name: Verify sdkmanager installation
+        run: |
+          which sdkmanager
+          sdkmanager --list
+        env:
+          ANDROID_HOME: $HOME/android-sdk
+          PATH: $HOME/android-sdk/cmdline-tools/bin:$PATH
 
       - name: setup emulator
         uses: reactivecircus/android-emulator-runner@v2
