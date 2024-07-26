@@ -18,10 +18,13 @@ public class AndroidTest {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, Platform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2");
-        capabilities.setCapability("uiautomator2ServerInstallTimeout", 60000);
-        capabilities.setCapability(MobileCapabilityType.APP,System.getProperty("user.dir")+"/ApiDemos-debug.apk");
-        AndroidDriver<AndroidElement> driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"),
-                capabilities);
+        capabilities.setCapability("appium:uiautomator2ServerInstallTimeout", 60000);
+        capabilities.setCapability(MobileCapabilityType.APP, System.getProperty("user.dir") + "/ApiDemos-debug.apk");
+        
+        AndroidDriver<AndroidElement> driver = new AndroidDriver<>(new URL("http://192.168.1.94:4723/"), capabilities);
         driver.findElementByAccessibilityId("Animation").click();
+        
+        // Make sure to quit the driver after the test
+        driver.quit();
     }
 }
