@@ -22,11 +22,15 @@ jobs:
           appium -v
           appium &>/dev/null &
 
+      - name: update android sdk tools
+        run: |
+          yes | sdkmanager --update
+
       - name: setup emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          arch: arm64-v8a  # Use ARM64 image
+          arch: arm64-v8a
           script: |
             # Wait for emulator to be fully started
             adb wait-for-device
