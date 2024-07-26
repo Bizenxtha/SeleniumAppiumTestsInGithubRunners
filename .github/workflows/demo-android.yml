@@ -28,6 +28,14 @@ jobs:
           appium -v
           appium &>/dev/null &
 
+      - name: Wait for Appium to be Ready
+        run: |
+          echo "Waiting for Appium server to be ready..."
+          while ! curl -s http://127.0.0.1:4723/wd/hub/status | grep -q "status\" : 0"; do
+            sleep 5
+          done
+          echo "Appium server is ready."
+
       - name: Setup Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -36,4 +44,12 @@ jobs:
           script: |
             adb wait-for-device
             adb shell input keyevent 82
+            echo "Running tests..."
+            # Run your Appium tests
             mvn clean test -Pandroid
+
+      - name: Post-Emulator Cleanup
+        if: always()
+        run: |
+          adb devices
+          adb -s emulator-5554 emu kill
