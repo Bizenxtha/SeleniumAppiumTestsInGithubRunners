@@ -22,16 +22,16 @@ jobs:
           appium -v
           appium &>/dev/null &
 
-      - name: List available commands
+      - name: Check environment
         run: |
-          echo $PATH
-          ls /usr/bin
+          echo "PATH: $PATH"
           ls /bin
+          ls /usr/bin
 
       - name: Install Android SDK Command-Line Tools
         shell: bash
         run: |
-          mkdir -p $HOME/android-sdk
+          /bin/mkdir -p $HOME/android-sdk
           curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-mac-8512546_latest.zip
           unzip commandlinetools.zip -d $HOME/android-sdk
           yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --update
