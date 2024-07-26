@@ -13,7 +13,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: pull the project in to the runner
+      - name: pull the project into the runner
         uses: actions/checkout@v3
 
       - name: setup appium
@@ -26,7 +26,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          arch: x86_64  # Ensure you're using a compatible architecture
+          arch: arm64-v8a  # Use ARM64 image
           script: |
             # Wait for emulator to be fully started
             adb wait-for-device
